@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fff4df">
+<title>Bé vui học chữ cái tiếng Việt</title>
+<style>
+:root{--ink:#463b69;--pink:#ff8eaa;--yellow:#ffd66b;--blue:#9bd9ee;--green:#a9dfbd;--paper:#fffaf0}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#fff1d6,#fce8f0 55%,#e8f6ff);font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink)}
+header{text-align:center;padding:22px 14px 12px}h1{font-size:clamp(25px,6vw,40px);margin:5px 0;color:#7655a6}header p{margin:5px}
+.wrap{max-width:1000px;margin:auto;padding:10px 14px 35px}.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0 18px}
+button{border:0;border-radius:18px;padding:11px 16px;font-weight:700;font-size:15px;background:#fff;box-shadow:0 3px 0 #e5d9ec;color:var(--ink);cursor:pointer}
+button.active,button.primary{background:#8064b5;color:white;box-shadow:0 3px 0 #624991}
+.panel{display:none;background:#ffffffd9;border:2px solid white;border-radius:24px;padding:18px;box-shadow:0 8px 25px #8e77a522}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px}
+.tile{background:#fff;border:2px solid #f4ddec;border-radius:18px;padding:12px 5px;text-align:center;cursor:pointer;min-height:112px}
+.tile strong{display:block;font-size:35px;color:#7958a6}.tile span{display:block;font-size:26px}.tile small{font-size:13px}
+.bigletter{font-size:78px;font-weight:900;color:#7958a6;line-height:1}.learnbox{display:flex;align-items:center;justify-content:center;gap:25px;flex-wrap:wrap;text-align:center;padding:15px}
+.animal{font-size:90px;background:#fff2c9;border-radius:30px;padding:15px}.word{font-size:25px;font-weight:800;margin:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:12px 0}
+.question{font-size:25px;text-align:center;font-weight:800;margin:18px}.choices{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.choices button{font-size:27px;min-width:75px}
+.status{text-align:center;font-weight:700;min-height:26px;margin:10px}
+.paintlayout{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px, .8fr);gap:18px;align-items:center}
+.canvaswrap{background:#fff;border:2px dashed #d9c5ed;border-radius:20px;padding:8px}
+canvas{width:100%;height:auto;display:block;touch-action:none;cursor:crosshair}
+.palette{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:12px}.swatch{width:34px;height:34px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px #ccc;padding:0}.swatch.selected{outline:3px solid #6d559d}
+.note{background:#fff7db;border-radius:14px;padding:12px;font-size:14px;line-height:1.5}
+@media(max-width:650px){.paintlayout{grid-template-columns:1fr}.panel{padding:13px}.animal{font-size:70px}.bigletter{font-size:65px}.tabs button{flex:1 1 40%}}
+</style>
+</head>
+<body>
+<header><div style="font-size:35px">🌈 🐻 🦋 🌼</div><h1>BÉ VUI HỌC CHỮ CÁI</h1><p>Học chữ thật vui – chơi mỗi ngày một chút! 💖</p></header>
+<div class="wrap">
+<nav class="tabs">
+<button class="active" data-tab="learn">📚 Học chữ</button><button data-tab="quiz">🎯 Đố vui</button><button data-tab="match">🧩 Ghép chữ</button><button data-tab="paint">🎨 Tô màu chữ</button>
+</nav>
+<section class="panel active" id="learn">
+<h2>🌟 Bảng chữ cái tiếng Việt</h2><p>Chạm vào từng chữ để xem từ ví dụ và nghe đọc nhé!</p>
+<div class="grid" id="alphabet"></div>
+<div class="learnbox"><div><div class="bigletter" id="shown">A a</div><div class="word" id="example">A – Áo</div><button class="primary" id="speak">🔊 Nghe đọc chữ</button></div><div class="animal" id="emoji">🐜</div></div>
+</section>
+<section class="panel" id="quiz">
+<h2>🎯 Bé thử tài nhé!</h2><div class="question" id="quizQ">Chữ thường nào giống chữ A?</div><div class="choices" id="quizChoices"></div><div class="status" id="quizStatus"></div><div class="row"><button class="primary" id="nextQuiz">Câu tiếp theo ➜</button></div><p style="text-align:center">⭐ Điểm của bé: <b id="score">0</b></p>
+</section>
+<section class="panel" id="match">
+<h2>🧩 Trò chơi ghép chữ</h2><p>Chọn một chữ IN HOA, sau đó chọn chữ thường tương ứng.</p><div class="question" id="matchPrompt">Bé hãy chọn chữ IN HOA trước nhé!</div><div class="choices" id="matchChoices"></div><div class="status" id="matchStatus"></div><div class="row"><button class="primary" id="newMatch">Chơi lượt mới</button></div>
+</section>
+<section class="panel" id="paint">
+<h2>🎨 Góc tô màu chữ cái</h2><p>Bé chọn màu rồi dùng ngón tay tô theo nét chữ chấm chấm nhé!</p>
+<div class="row"><button id="prevPaint">← Chữ trước</button><b id="paintName" style="font-size:24px">A a</b><button id="nextPaint">Chữ tiếp →</button></div>
+<div class="paintlayout"><div class="canvaswrap"><canvas id="paintCanvas" width="600" height="430"></canvas></div><div><div class="animal" id="paintEmoji" style="text-align:center">🐜</div><div class="word" id="paintWord" style="text-align:center">A – Áo</div><div class="palette" id="palette"></div><div class="row"><button id="clearPaint">Xóa để tô lại</button></div><div class="note">💡 Mẹo nhỏ: Bé có thể phóng to màn hình bằng hai ngón tay. Chữ mẫu là nét viền để bé tô tự do, chưa phải bài luyện viết đúng thứ tự nét.</div></div></div>
+</section>
+</div>
+<script>
+const letters=[
+['A','a','Áo','👕'],['Ă','ă','Ăn','🍎'],['Â','â','Ấm','🫖'],['B','b','Bướm','🦋'],['C','c','Cá','🐟'],['D','d','Dê','🐐'],['Đ','đ','Đèn','💡'],['E','e','Em bé','👶'],['Ê','ê','Ếch','🐸'],['G','g','Gà','🐓'],['H','h','Hoa','🌼'],['I','i','Ích','🐿️'],['K','k','Kem','🍦'],['L','l','Lá','🍃'],['M','m','Mèo','🐱'],['N','n','Nai','🦌'],['O','o','Ong','🐝'],['Ô','ô','Ô tô','🚗'],['Ơ','ơ','Ớt','🌶️'],['P','p','Pin','🔋'],['Q','q','Quà','🎁'],['R','r','Rùa','🐢'],['S','s','Sao','⭐'],['T','t','Thỏ','🐰'],['U','u','Ú','☂️'],['Ư','ư','Ước mơ','🌈'],['V','v','Voi','🐘'],['X','x','Xe','🚲'],['Y','y','Y tá','🧑‍⚕️']];
+let current=0,score=0,qAnswer='',matchUpper='',matchDone=false,paintIndex=0,ink='#f05b87',drawing=false;
+const $=id=>document.getElementById(id);
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');if(b.dataset.tab==='paint')drawTemplate()}));
+function showLetter(i){current=i;let l=letters[i];$('shown').textContent=l[0]+' '+l[1];$('example').textContent=l[0]+' – '+l[2];$('emoji').textContent=l[3];}
+letters.forEach((l,i)=>{let d=document.createElement('div');d.className='tile';d.innerHTML=`<strong>${l[0]} ${l[1]}</strong><span>${l[3]}</span><small>${l[2]}</small>`;d.onclick=()=>showLetter(i);$('alphabet').appendChild(d)});
+$('speak').onclick=()=>{let l=letters[current];if('speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(l[0]);u.lang='vi-VN';speechSynthesis.speak(u)}else alert('Trình duyệt chưa hỗ trợ đọc chữ. Bé có thể nhờ người lớn đọc cùng nhé!')};
+function quiz(){let i=Math.floor(Math.random()*letters.length),l=letters[i];qAnswer=l[1];$('quizQ').textContent=`Chữ thường nào tương ứng với chữ ${l[0]}?`;let opts=[l[1]];while(opts.length<3){let x=letters[Math.floor(Math.random()*letters.length)][1];if(!opts.includes(x))opts.push(x)}opts.sort(()=>Math.random()-.5);$('quizChoices').innerHTML='';opts.forEach(x=>{let b=document.createElement('button');b.textContent=x;b.onclick=()=>{if(b.dataset.done)return;document.querySelectorAll('#quizChoices button').forEach(z=>z.dataset.done='1');if(x===qAnswer){score++;$('quizStatus').textContent='🎉 Chính xác! Bé giỏi quá!';}else $('quizStatus').textContent='💗 Chưa đúng rồi, đáp án là '+qAnswer+'. Bé cố lên nhé!';$('score').textContent=score};$('quizChoices').appendChild(b)});$('quizStatus').textContent='';}
+$('nextQuiz').onclick=quiz;quiz();
+function match(){matchUpper=letters[Math.floor(Math.random()*letters.length)][0];matchDone=false;$('matchPrompt').textContent=`Tìm chữ thường của ${matchUpper}`;let correct=letters.find(x=>x[0]===matchUpper)[1],opts=[correct];while(opts.length<4){let x=letters[Math.floor(Math.random()*letters.length)][1];if(!opts.includes(x))opts.push(x)}opts.sort(()=>Math.random()-.5);$('matchChoices').innerHTML='';opts.forEach(x=>{let b=document.createElement('button');b.textContent=x;b.onclick=()=>{if(matchDone)return;matchDone=true;$('matchStatus').textContent=x===correct?'🌟 Bé ghép đúng rồi!':'💞 Đáp án đúng là '+correct+'. Mình thử lượt khác nhé!'};$('matchChoices').appendChild(b)});$('matchStatus').textContent='';}
+$('newMatch').onclick=match;match();
+const canvas=$('paintCanvas'),ctx=canvas.getContext('2d');
+function drawTemplate(){let l=letters[paintIndex];$('paintName').textContent=l[0]+' '+l[1];$('paintEmoji').textContent=l[3];$('paintWord').textContent=l[0]+' – '+l[2];ctx.clearRect(0,0,600,430);ctx.fillStyle='#fffdf8';ctx.fillRect(0,0,600,430);ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 290px "Trebuchet MS",Arial';ctx.lineWidth=5;ctx.strokeStyle='#c5a9df';ctx.setLineDash([3,10]);ctx.strokeText(l[0],300,210);ctx.setLineDash([]);ctx.font='bold 65px Arial';ctx.fillStyle='#a78ac4';ctx.fillText(l[1],300,365);}
+$('prevPaint').onclick=()=>{paintIndex=(paintIndex+letters.length-1)%letters.length;drawTemplate()};$('nextPaint').onclick=()=>{paintIndex=(paintIndex+1)%letters.length;drawTemplate()};
+const colors=['#f05b87','#ff9f43','#ffd43b','#70c77a','#49b9d2','#6385e8','#9b70d6','#754c36','#333333','#ffffff'];
+colors.forEach(c=>{let b=document.createElement('button');b.className='swatch';b.style.background=c;b.title=c;b.onclick=()=>{ink=c;document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('selected'));b.classList.add('selected')};$('palette').appendChild(b)});$('palette').firstChild.classList.add('selected');
+function pos(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
+canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;let p=pos(e);ctx.strokeStyle=ink;ctx.lineWidth=18;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineTo(p.x,p.y);ctx.stroke()});
+function stop(){drawing=false}canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
+$('clearPaint').onclick=drawTemplate;drawTemplate();
+</script>
+</body></html>
